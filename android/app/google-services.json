@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "826369782208",
+    "project_id": "chatapp-a9b49",
+    "storage_bucket": "chatapp-a9b49.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826369782208:android:015f9d911559beaefad825",
+        "android_client_info": {
+          "package_name": "com.hyewonnam.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq-1f9LGPSXOWKLX1se6g7ZNCqNfuZzxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

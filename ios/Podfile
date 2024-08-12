@@ -11,10 +11,12 @@ prepare_react_native_project!
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-  use_frameworks! :linkage => linkage.to_sym
+  # use_frameworks! :linkage => linkage.to_sym
+  use_frameworks! :linkage => :static
 end
 
 target 'ChatApp' do
+  use_frameworks! :linkage => :static
   config = use_native_modules!
 
   use_react_native!(
@@ -36,5 +38,5 @@ target 'ChatApp' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
-  end
+  end 
 end
