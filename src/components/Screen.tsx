@@ -49,7 +49,7 @@ const Screen = ({children, title}: ScreenProps) => {
         <View style={styles.right} />
       </View>
 
-      {/* <View style={styles.body}>{children}</View> */}
+      <View style={styles.body}>{children}</View>
     </SafeAreaView>
   );
 };
