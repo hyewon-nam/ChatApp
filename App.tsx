@@ -3,9 +3,15 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {RootStackParamList} from './src/types';
 import SignupScreen from './src/screens/SignupScreen';
+import AuthProvider from './src/components/AuthProvider';
+import SigninScreen from './src/screens/SigninScreen';
 
 const App = () => {
-  return <Screens />;
+  return (
+    <AuthProvider>
+      <Screens />
+    </AuthProvider>
+  );
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -15,6 +21,7 @@ const Screens = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Signup" component={SignupScreen}></Stack.Screen>
+        <Stack.Screen name="Signin" component={SigninScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

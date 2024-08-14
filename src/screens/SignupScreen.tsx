@@ -1,7 +1,9 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useContext, useMemo, useState} from 'react';
 import Screen from '../components/Screen';
 import validator from 'validator';
 import {
+  ActivityIndicator,
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,12 +12,19 @@ import {
   View,
 } from 'react-native';
 import Colors from '../modules/Colors';
+import AuthContext from '../components/AuthContext';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../types';
 
 const SignupScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
   const [name, setName] = useState('');
+  const {signup, prosessingSignup} = useContext(AuthContext); //14:47 인터넷 강의
+  const {navigate} =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const styles = StyleSheet.create({
     container: {flex: 1, padding: 20},
@@ -57,6 +66,11 @@ const SignupScreen = () => {
     signinButtonText: {
       color: Colors.BLACK,
       fontSize: 16,
+    },
+    signingContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   });
 
@@ -119,76 +133,91 @@ const SignupScreen = () => {
     // return styles.signupButton;
   }, [signupButtonEnabled, styles.signupButton, styles.disableSignupButton]); //dependency 라는 뜻
 
-  const onPressSignupButton = useCallback(() => {
-    return console.log('abc');
-  }, []);
-  const onPressSigninButton = useCallback(() => {}, []);
+  const onPressSignupButton = useCallback(async () => {
+    try {
+      await signup(email, password, name);
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  }, [signup, email, password, name]);
+  const onPressSigninButton = useCallback(() => {
+    navigate('Signin'); //Stack 에 등록된 이름을 입력한다
+  }, [navigate]);
 
   return (
     <Screen title="회원가입">
-      <ScrollView style={styles.container}>
-        <View style={styles.section}>
-          <Text style={styles.title}>Email Address</Text>
-          <TextInput
-            value={email}
-            style={styles.input}
-            onChangeText={onChangeEmailText}
-          />
-          {emailErrorText && (
-            <Text style={styles.errorText}>{emailErrorText}</Text>
-          )}
+      {prosessingSignup ? (
+        <View style={styles.signingContainer}>
+          <ActivityIndicator />
         </View>
+      ) : (
+        <ScrollView style={styles.container}>
+          <View style={styles.section}>
+            <Text style={styles.title}>Email Address</Text>
+            <TextInput
+              value={email}
+              style={styles.input}
+              onChangeText={onChangeEmailText}
+            />
+            {emailErrorText && (
+              <Text style={styles.errorText}>{emailErrorText}</Text>
+            )}
+          </View>
 
-        <View style={styles.section}>
-          <Text style={styles.title}>Password</Text>
-          <TextInput
-            secureTextEntry
-            value={password}
-            style={styles.input}
-            onChangeText={onChangePasswordText}
-          />
-          {emailErrorText && (
-            <Text style={styles.errorText}>{passwordErrorText}</Text>
-          )}
-        </View>
+          <View style={styles.section}>
+            <Text style={styles.title}>Password</Text>
+            <TextInput
+              secureTextEntry
+              value={password}
+              style={styles.input}
+              onChangeText={onChangePasswordText}
+            />
+            {emailErrorText && (
+              <Text style={styles.errorText}>{passwordErrorText}</Text>
+            )}
+          </View>
 
-        <View style={styles.section}>
-          <Text style={styles.title}>Password Confirm</Text>
-          <TextInput
-            // secureTextEntry
-            value={confirmedPassword}
-            style={styles.input}
-            onChangeText={onChangeConfirmedPasswordText}
-          />
-          {emailErrorText && (
-            <Text style={styles.errorText}>{passwordErrorText}</Text>
-          )}
-        </View>
+          <View style={styles.section}>
+            <Text style={styles.title}>Password Confirm</Text>
+            <TextInput
+              // secureTextEntry
+              value={confirmedPassword}
+              style={styles.input}
+              onChangeText={onChangeConfirmedPasswordText}
+            />
+            {emailErrorText && (
+              <Text style={styles.errorText}>{passwordErrorText}</Text>
+            )}
+          </View>
 
-        <View style={styles.section}>
-          <Text style={styles.title}>Name</Text>
-          <TextInput
-            value={name}
-            style={styles.input}
-            onChangeText={onChangeNameText}
-          />
-          {emailErrorText && (
-            <Text style={styles.errorText}>{nameErrorText}</Text>
-          )}
-        </View>
-        <View>
-          <TouchableOpacity
-            style={signupButtonStyle}
-            onPress={onPressSignupButton}>
-            <Text style={styles.signupButtonText}>Sign up</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.signinButton}
-            onPress={onPressSigninButton}>
-            <Text style={styles.signinButtonText}>이미 계정이 있으신가요?</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+          <View style={styles.section}>
+            <Text style={styles.title}>Name</Text>
+            <TextInput
+              value={name}
+              style={styles.input}
+              onChangeText={onChangeNameText}
+            />
+            {emailErrorText && (
+              <Text style={styles.errorText}>{nameErrorText}</Text>
+            )}
+          </View>
+          <View>
+            <TouchableOpacity
+              style={signupButtonStyle}
+              onPress={onPressSignupButton}
+              disabled={!signupButtonEnabled}>
+              <Text style={styles.signupButtonText}>Sign up</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.signinButton}
+              onPress={onPressSigninButton}>
+              <Text style={styles.signinButtonText}>
+                이미 계정이 있으신가요?
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      )}
     </Screen>
   );
 };
