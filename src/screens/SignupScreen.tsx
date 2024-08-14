@@ -16,63 +16,16 @@ import AuthContext from '../components/AuthContext';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types';
+import styles from '../modules/Styles';
 
 const SignupScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
   const [name, setName] = useState('');
-  const {signup, prosessingSignup} = useContext(AuthContext); //14:47 인터넷 강의
+  const {signup, processingSignup} = useContext(AuthContext); //14:47 인터넷 강의
   const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-  const styles = StyleSheet.create({
-    container: {flex: 1, padding: 20},
-    section: {marginBottom: 20},
-    title: {fontSize: 18, fontWeight: 'bold'},
-    input: {
-      marginTop: 10,
-      borderWidth: 1,
-      padding: 10,
-      borderRadius: 10,
-      borderColor: Colors.GREY,
-      fontSize: 16,
-    },
-    errorText: {
-      fontSize: 14,
-      color: Colors.RED,
-      marginTop: 4,
-    },
-    signupButton: {
-      backgroundColor: Colors.BLACK,
-      borderRadius: 10,
-      alignItems: 'center',
-      padding: 4,
-    },
-    signupButtonText: {
-      margin: 10,
-      color: Colors.WHITE,
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-    disableSignupButton: {
-      backgroundColor: Colors.GREY,
-    },
-    signinButton: {
-      marginTop: 5,
-      alignItems: 'center',
-      padding: 4,
-    },
-    signinButtonText: {
-      color: Colors.BLACK,
-      fontSize: 16,
-    },
-    signingContainer: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
 
   const emailErrorText = useMemo(() => {
     if (email.length === 0) {
@@ -131,7 +84,7 @@ const SignupScreen = () => {
     }
     return [styles.signupButton, styles.disableSignupButton]; // A + B 스타일 덮어 씌운다는 문법
     // return styles.signupButton;
-  }, [signupButtonEnabled, styles.signupButton, styles.disableSignupButton]); //dependency 라는 뜻
+  }, [signupButtonEnabled]); //dependency 라는 뜻, 여기서 styles 는 import 된거라서 dependency 에 추가하지 않는다.
 
   const onPressSignupButton = useCallback(async () => {
     try {
@@ -146,7 +99,7 @@ const SignupScreen = () => {
 
   return (
     <Screen title="회원가입">
-      {prosessingSignup ? (
+      {processingSignup ? (
         <View style={styles.signingContainer}>
           <ActivityIndicator />
         </View>

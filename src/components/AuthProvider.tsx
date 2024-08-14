@@ -9,7 +9,8 @@ import {Text, View} from 'react-native';
 const AuthProvider = ({children}: {children: React.ReactNode}) => {
   const [initialized, setInitialized] = useState(false); // useState<boolean>(false) 이렇게 써도 됨. Type Inferance 라서, 당연히 여기서 boolean 이잖아 그래서 묵시
   const [user, setUser] = useState<User | null>(null); //null 만 넣어놓으면 나중에 User type 넘길때 오류가 나겠지 그래서 명시
-  const [prosessingSignup, setProsessingSignup] = useState<boolean>(false);
+  const [processingSignup, setprocessingSignup] = useState<boolean>(false);
+  const [processingSignin, setprocessingSignin] = useState<boolean>(false);
 
   useEffect(() => {
     //렌더링 될 때 실행되는 함수!!! 여기 안에서 cleanUp/return 함수를 정의해 놓으면 언마운트 될때 실행됨 :>
@@ -34,7 +35,7 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
 
   const signup = useCallback(
     async (email: string, password: string, name: string) => {
-      setProsessingSignup(true); //지금 시작했다 사인업~
+      setprocessingSignup(true); //지금 시작했다 사인업~
       try {
         const {user: currentUser} = await auth().createUserWithEmailAndPassword(
           email,
@@ -50,15 +51,30 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
             name,
           });
       } finally {
-        setProsessingSignup(false);
+        setprocessingSignup(false);
       }
     },
     [],
   );
 
+  const signin = useCallback(async (email: string, password: string) => {
+    setprocessingSignin(true);
+    auth().signInWithEmailAndPassword(email, password);
+    console.log(email);
+    console.log(password);
+    setprocessingSignin(false);
+  }, []);
+
   const value = useMemo(() => {
-    return {initialized, user, signup, prosessingSignup};
-  }, [initialized, user, signup, prosessingSignup]);
+    return {
+      initialized,
+      user,
+      signup,
+      signin,
+      processingSignup,
+      processingSignin,
+    };
+  }, [initialized, user, signup, signin, processingSignup, processingSignin]);
 
   return (
     <AuthContext.Provider value={value}>
