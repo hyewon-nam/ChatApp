@@ -48,6 +48,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  homeContainer: {flex: 1, padding: 20},
+  homeSectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: Colors.BLACK,
+    flexDirection: 'row',
+  },
+  homeMyProfile: {
+    // flexDirection: 'row',
+    backgroundColor: Colors.BLACK,
+    padding: 20,
+    borderRadius: 20,
+  },
+  homeMyNameText: {
+    color: Colors.WHITE,
+    fontSize: 16,
+    marginVertical: 2,
+  },
+  homeLogoutText: {
+    color: Colors.WHITE,
+    textAlign: 'right',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;
