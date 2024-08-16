@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Screen from '../components/Screen';
 import AuthContext from '../components/AuthContext';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
 import styles from '../modules/Styles';
 import auth from '@react-native-firebase/auth';
 import {getFirestore} from '@react-native-firebase/firestore';
@@ -33,13 +33,24 @@ const HomeScreen = () => {
     }
   }, [me?.userId]);
 
-  // useEffect(() => {
-  //   loadUsers();
-  // }, [users, loadUsers]); //ConnectedCallback 같은 것임!
+  useEffect(() => {
+    loadUsers();
+  }, [loadUsers]); //ConnectedCallback 같은 것임! 근데 여기에 의존성 이렇게 추가하면 ㅋㅋㅋ 이게 변경될 때마다 실행되니까 무한루프 돌 수 있지. 그냥 빈 어레이 넣어 아니면 메소드 넣거나
 
   if (me == null) {
     return null;
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const renderLoading = useCallback(() => {
+    return (
+      <>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator />
+        </View>
+      </>
+    );
+  }, []);
 
   return (
     <Screen title="HOME">
@@ -54,6 +65,9 @@ const HomeScreen = () => {
               <Text style={styles.homeLogoutText}>Log out</Text>
             </TouchableOpacity>
           </View>
+        </View>
+        <View style={styles.homeUserListSection}>
+          {loadingUsers ? renderLoading() : <Text>a</Text>}
         </View>
       </View>
     </Screen>

@@ -78,6 +78,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  homeUserListSection: {
+    marginTop: '10%',
+    flex: 1,
+  },
 });
 
 export default styles;
