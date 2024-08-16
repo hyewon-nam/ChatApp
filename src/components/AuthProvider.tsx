@@ -15,6 +15,7 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     //렌더링 될 때 실행되는 함수!!! 여기 안에서 cleanUp/return 함수를 정의해 놓으면 언마운트 될때 실행됨 :>
     const unsubscribe = auth().onUserChanged(async firebaseUser => {
+      console.log(firebaseUser);
       if (firebaseUser != null) {
         setUser({
           userId: firebaseUser.uid,
@@ -58,11 +59,14 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
   );
 
   const signin = useCallback(async (email: string, password: string) => {
-    setprocessingSignin(true);
-    auth().signInWithEmailAndPassword(email, password);
-    console.log(email);
-    console.log(password);
-    setprocessingSignin(false);
+    try {
+      setprocessingSignin(true);
+      await auth().signInWithEmailAndPassword(email, password);
+      console.log(email);
+      console.log(password);
+    } finally {
+      setprocessingSignin(false);
+    }
   }, []);
 
   const value = useMemo(() => {

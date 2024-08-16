@@ -1,8 +1,8 @@
-import {collection} from '@react-native-firebase/firestore';
-
 export type RootStackParamList = {
   Signup: undefined;
   Signin: undefined;
+  Home: undefined;
+  Loading: undefined;
 };
 
 export interface User {

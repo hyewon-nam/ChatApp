@@ -1,10 +1,12 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useCallback, useContext} from 'react';
 import {RootStackParamList} from './src/types';
 import SignupScreen from './src/screens/SignupScreen';
 import AuthProvider from './src/components/AuthProvider';
 import SigninScreen from './src/screens/SigninScreen';
+import AuthContext from './src/components/AuthContext';
+import HomeScreen from './src/screens/HomeScreen';
 
 const App = () => {
   return (
@@ -17,11 +19,29 @@ const App = () => {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Screens = () => {
+  const {user, processingSignin, processingSignup, initialized} =
+    useContext(AuthContext);
+  const renderRootStack = useCallback(() => {
+    if (!initialized) {
+      return <Stack.Screen name="Loading" component={LoadingScreen} />;
+    }
+    if (user != null && !processingSignin && !processingSignup) {
+      //완전한 로그인 상태 일때
+      return <Stack.Screen name="Home" component={HomeScreen} />;
+    } else {
+      return (
+        <>
+          <Stack.Screen name="Signup" component={SignupScreen}></Stack.Screen>
+          <Stack.Screen name="Signin" component={SigninScreen}></Stack.Screen>
+        </>
+      );
+    }
+  }, [user, processingSignin, processingSignup]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Signup" component={SignupScreen}></Stack.Screen>
-        <Stack.Screen name="Signin" component={SigninScreen}></Stack.Screen>
+        {renderRootStack()}
       </Stack.Navigator>
     </NavigationContainer>
   );
