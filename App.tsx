@@ -8,6 +8,7 @@ import SigninScreen from './src/screens/SigninScreen';
 import AuthContext from './src/components/AuthContext';
 import HomeScreen from './src/screens/HomeScreen';
 import LoadingScreen from './src/screens/LoadingScreen';
+import ChatScreen from './src/screens/ChatScreen';
 
 const App = () => {
   return (
@@ -28,7 +29,12 @@ const Screens = () => {
       return <Stack.Screen name="Loading" component={LoadingScreen} />;
     } else if (user != null && !processingSignin && !processingSignup) {
       //완전한 로그인 상태 일때
-      return <Stack.Screen name="Home" component={HomeScreen} />;
+      return (
+        <>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Chat" component={ChatScreen} />
+        </>
+      );
     } else {
       return (
         <>

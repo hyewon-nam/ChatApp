@@ -1,11 +1,21 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Screen from '../components/Screen';
 import AuthContext from '../components/AuthContext';
-import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import styles from '../modules/Styles';
 import auth from '@react-native-firebase/auth';
 import {getFirestore} from '@react-native-firebase/firestore';
 import {User} from '../types';
+
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../types';
 
 const HomeScreen = () => {
   const {user: me} = useContext(AuthContext);
@@ -15,6 +25,15 @@ const HomeScreen = () => {
     auth().signOut(); //하 signOut 이렇게 하면 안먹고 signOut(); 이렇게 해야 먹음!
     console.log('Log OuT');
   }, []);
+  const {navigate} =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const onPressChatStart = useCallback(
+    (userId: String) => {
+      console.log(userId);
+      navigate('Chat');
+    },
+    [navigate],
+  );
 
   const loadUsers = useCallback(async () => {
     try {
@@ -67,7 +86,39 @@ const HomeScreen = () => {
           </View>
         </View>
         <View style={styles.homeUserListSection}>
-          {loadingUsers ? renderLoading() : <Text>a</Text>}
+          {loadingUsers ? (
+            renderLoading()
+          ) : (
+            <>
+              <Text style={styles.homeSectionTitleText}>
+                다른 사용자와 대화 해보세요!
+              </Text>
+              <FlatList
+                style={styles.homeUserList}
+                data={users}
+                renderItem={({item: user}) => (
+                  <TouchableOpacity
+                    style={styles.homeUserListItem}
+                    // 파라미터를 화면 전환할 때 같이 넘길 수 있음! 당연하지!
+                    onPress={() =>
+                      navigate('Chat', {
+                        userIds: [me.userId, user.userId],
+                        other: user,
+                      })
+                    }>
+                    <Text style={styles.otherNameText}> {user.name} </Text>
+                    <Text style={styles.otherNameText}> {user.email} </Text>
+                  </TouchableOpacity>
+                )}
+                ItemSeparatorComponent={() => (
+                  <View style={styles.userSeperator}></View>
+                )}
+                ListEmptyComponent={() => {
+                  return <Text> 사용자가 없습니다 </Text>;
+                }}
+              />
+            </>
+          )}
         </View>
       </View>
     </Screen>

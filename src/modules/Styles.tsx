@@ -82,6 +82,24 @@ const styles = StyleSheet.create({
     marginTop: '10%',
     flex: 1,
   },
+  homeSectionTitleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  homeUserList: {},
+  homeUserListItem: {
+    backgroundColor: 'lightgrey',
+    padding: 20,
+    borderRadius: 20,
+    marginBottom: 10,
+  },
+  otherNameText: {
+    color: Colors.BLACK,
+    fontSize: 16,
+    marginVertical: 2,
+  },
+  userSeperator: {padding: 0},
 });
 
 export default styles;
