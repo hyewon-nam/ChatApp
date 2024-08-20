@@ -17,4 +17,11 @@ export interface User {
 
 export enum Collections {
   USERS = 'users',
+  CHATS = 'chats',
+}
+
+export interface Chat {
+  id: string;
+  userIds?: string[];
+  users?: User[];
 }

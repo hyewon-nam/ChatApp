@@ -91,7 +91,7 @@ const HomeScreen = () => {
           ) : (
             <>
               <Text style={styles.homeSectionTitleText}>
-                다른 사용자와 대화 해보세요!
+                다른 사용자와 대화해 보세요!
               </Text>
               <FlatList
                 style={styles.homeUserList}

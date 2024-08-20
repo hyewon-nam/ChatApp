@@ -100,6 +100,25 @@ const styles = StyleSheet.create({
     marginVertical: 2,
   },
   userSeperator: {padding: 0},
+  chatContainer: {
+    flex: 1,
+    padding: 5,
+  },
+  memberSection: {},
+  userProfile: {
+    margin: 3,
+    width: 34,
+    height: 34,
+    backgroundColor: Colors.BLACK,
+    // flexDirection: 'row',
+    borderRadius: 34 / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  userProfileText: {
+    color: Colors.WHITE,
+  },
 });
 
 export default styles;
