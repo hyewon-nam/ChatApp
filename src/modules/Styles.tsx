@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     margin: 3,
     width: 34,
     height: 34,
-    backgroundColor: Colors.BLACK,
+    backgroundColor: Colors.GREY,
     // flexDirection: 'row',
     borderRadius: 34 / 2,
     justifyContent: 'center',
@@ -117,6 +117,39 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   userProfileText: {
+    color: Colors.WHITE,
+  },
+  chatMessageList: {
+    flex: 1,
+  },
+  chatIputContainer: {
+    // backgroundColor: 'green',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  chatTextInputContainer: {
+    width: '90%',
+    minHeight: '5%',
+    // backgroundColor: 'red',
+    borderColor: Colors.GREY,
+    borderWidth: 1,
+    marginRight: 5,
+    padding: 12,
+    borderRadius: 20,
+  },
+  chatTextInput: {
+    padding: 0,
+  },
+  chatSendButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.BLACK,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  chatSendText: {
     color: Colors.WHITE,
   },
 });
