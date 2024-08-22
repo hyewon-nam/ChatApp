@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useContext, useMemo, useState} from 'react';
 import Screen from '../components/Screen';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
@@ -13,16 +13,20 @@ import {
   View,
 } from 'react-native';
 import Colors from '../modules/Colors';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import AuthContext from '../components/AuthContext';
 
 const ChatScreen = () => {
+  const {user: me} = useContext(AuthContext);
   const {params} = useRoute<RouteProp<RootStackParamList, 'Chat'>>();
   const {other, userIds} = params;
   const [textInput, setTextInput] = useState(''); //destructuring 이 아님
+  const {chat, loadingChat, sendMessage, sending, messages} = useChat(userIds);
+
   // useEffect(() => {
   //   console.log('textInput:', textInput); // 상태 업데이트 확인용
   // }, [textInput]);
 
+  console.log('messages', messages);
   //useRoute 를 써야, 화면전환할 때 넘긴 파라미터를 가져올 수가 있음.
   const sendDisabled = useMemo(
     () => (textInput || '').length === 0,
@@ -35,11 +39,13 @@ const ChatScreen = () => {
   ];
 
   const onPressSendButton = useCallback(() => {
-    // TODO: send text message
+    if (me == null) {
+      throw new Error('Not found user');
+    }
+    sendMessage(textInput, me);
     setTextInput('');
-  }, []);
+  }, [me, sendMessage, textInput]);
 
-  const {chat, loadingChat} = useChat(userIds);
   const renderChat = useCallback(() => {
     if (chat == null) {
       return null;
@@ -77,7 +83,7 @@ const ChatScreen = () => {
             }
             disabled={sendDisabled}
             onPress={onPressSendButton}>
-            <Text style={styles.chatSendText}>Send</Text>
+            <Text style={styles.chatSendText}>Sendi</Text>
             {/* <Icon style={styles.chatSendIcon} name="send" /> */}
           </TouchableOpacity>
         </View>
