@@ -20,13 +20,13 @@ const ChatScreen = () => {
   const {params} = useRoute<RouteProp<RootStackParamList, 'Chat'>>();
   const {other, userIds} = params;
   const [textInput, setTextInput] = useState(''); //destructuring 이 아님
-  const {chat, loadingChat, sendMessage, sending, messages} = useChat(userIds);
+  const {chat, loadingChat, sendMessage, sending, messages, loadingMessages} =
+    useChat(userIds);
 
   // useEffect(() => {
   //   console.log('textInput:', textInput); // 상태 업데이트 확인용
   // }, [textInput]);
 
-  console.log('messages', messages);
   //useRoute 를 써야, 화면전환할 때 넘긴 파라미터를 가져올 수가 있음.
   const sendDisabled = useMemo(
     () => (textInput || '').length === 0,
@@ -67,7 +67,20 @@ const ChatScreen = () => {
           />
         </View>
 
-        <View style={styles.chatMessageList}></View>
+        <View style={styles.chatMessageList}>
+          <FlatList
+            data={messages}
+            renderItem={({item: messages}) => {
+              return (
+                <View>
+                  <Text>{messages.text}</Text>
+                  <Text>{messages.createdAt.toLocaleString()}</Text>
+                  <Text>{messages.user.name}</Text>
+                </View>
+              );
+            }}
+          />
+        </View>
         <View style={styles.chatIputContainer}>
           <View style={styles.chatTextInputContainer}>
             <TextInput
@@ -89,7 +102,14 @@ const ChatScreen = () => {
         </View>
       </View>
     );
-  }, [chat, onPressSendButton, sendDisabled, textInput]);
+  }, [
+    chat,
+    disabledSendButtonStyle,
+    messages,
+    onPressSendButton,
+    sendDisabled,
+    textInput,
+  ]);
 
   return (
     <Screen title={other.name}>

@@ -152,6 +152,9 @@ const styles = StyleSheet.create({
   chatSendText: {
     color: Colors.WHITE,
   },
+  messageContainer: {},
+  messsageNameText: {},
+  messageBox: {},
 });
 
 export default styles;

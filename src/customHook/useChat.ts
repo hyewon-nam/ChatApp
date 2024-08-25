@@ -27,31 +27,50 @@ const useChat = (userIds: string[]) => {
 
       if (chatSnapShot.docs.length > 0) {
         console.log('옛날꺼 가져옴');
+
+        const chatMessageSnapshot = await getFirestore()
+          .collection(Collections.CHATS)
+          .doc(chatSnapShot.docs[0].id)
+          .collection(Collections.MESSAGES)
+          .get(); //sub-collection 에 접근해서 document add
+
+        const chatMessage = chatMessageSnapshot.docs.map(doc => {
+          console.log('doc', doc);
+          return {...(doc.data() as Message)};
+        });
+
+        setMessage(chatMessage);
+
         const chat = chatSnapShot.docs[0];
+
         setChat({
           id: chat.id,
           userIds: chat.data().userIds as string[],
           users: chat.data().users as User[],
         });
-      }
-      const userSnapshot = await getFirestore()
-        .collection('users')
-        .where('userId', 'in', userIds)
-        .get();
+      } else {
+        const userSnapshot = await getFirestore()
+          .collection('users')
+          .where('userId', 'in', userIds)
+          .get();
 
-      const users = userSnapshot.docs.map(doc => doc.data() as User);
-      const data = {
-        userIds: getChatKey(userIds),
-        users,
-      };
-      const chat = await getFirestore().collection(Collections.CHATS).add(data);
-      setChat({id: chat.id, ...data});
+        const users = userSnapshot.docs.map(doc => doc.data() as User);
+        const data = {
+          userIds: getChatKey(userIds),
+          users,
+        };
+        const chat = await getFirestore()
+          .collection(Collections.CHATS)
+          .add(data);
+        setChat({id: chat.id, ...data});
+      }
     } finally {
       setLoadingChat(false);
     }
   }, [userIds]);
 
   useEffect(() => {
+    console.log('1');
     loadChat();
   }, [loadChat, userIds]);
 
@@ -88,6 +107,8 @@ const useChat = (userIds: string[]) => {
   const loadMessages = useCallback(async (chatId: string) => {
     try {
       setLoadingMessages(true);
+      console.log('chatId', chatId);
+
       const messagesSnapshot = await getFirestore()
         .collection(Collections.CHATS)
         .doc(chatId) //doc 은 문서 하나
@@ -105,6 +126,8 @@ const useChat = (userIds: string[]) => {
         };
       });
 
+      console.log('msg', msg);
+
       setMessage(msg);
     } finally {
       setLoadingMessages(false);
@@ -113,6 +136,7 @@ const useChat = (userIds: string[]) => {
 
   useEffect(() => {
     if (chat?.id != null) {
+      console.log('2');
       loadMessages(chat.id);
     }
   }, [chat?.id, loadMessages]);
