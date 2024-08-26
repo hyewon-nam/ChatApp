@@ -11,20 +11,39 @@ interface MessageProps {
 }
 
 const Message = ({name, text, createdAt, isOtherMessage}: MessageProps) => {
+  // console.log('createdAt', createdAt);
+  // console.log('createdAt', moment(createdAt).format('yyyyMMDD HH:mm:ss'));
   const renderMessageBox = useCallback(() => {
+    if (isOtherMessage == true) {
+      return (
+        <>
+          <View key="message" style={styles.messageOtherBubble}>
+            <Text style={styles.messageOtherText}>{text}</Text>
+          </View>
+          <Text key="timeText" style={styles.messageTimeText}>
+            {moment(createdAt).format('HH:mm')}
+          </Text>
+        </>
+      );
+    }
     return (
       <>
-        <Text style={styles.messageTimeText}>
-          {moment(createdAt).format('MM-DD HH:mm')}
+        <Text key="timeText" style={styles.messageTimeText}>
+          {moment(createdAt).format('HH:mm')}
         </Text>
-        <View style={styles.messageBubble}>
+        <View key="message" style={styles.messageBubble}>
           <Text style={styles.messageText}>{text}</Text>
         </View>
       </>
     );
-  }, [createdAt, text]);
+  }, [createdAt, isOtherMessage, text]);
   return (
-    <View style={styles.messageContainer}>
+    <View
+      style={
+        isOtherMessage === true
+          ? styles.messageOtherContainer
+          : styles.messageContainer
+      }>
       <Text style={styles.messsageNameText}>{name}</Text>
       <View style={styles.messageBox}>{renderMessageBox()}</View>
     </View>

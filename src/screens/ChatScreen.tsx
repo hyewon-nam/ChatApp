@@ -83,6 +83,9 @@ const ChatScreen = () => {
                 // </View>
               );
             }}
+            ItemSeparatorComponent={() => {
+              <View style={styles.messageSeeparator}></View>;
+            }}
           />
         </View>
         <View style={styles.chatIputContainer}>

@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 12,
   },
   chatTextInputContainer: {
     width: '90%',
@@ -152,12 +153,39 @@ const styles = StyleSheet.create({
   chatSendText: {
     color: Colors.WHITE,
   },
-  messageContainer: {},
-  messsageNameText: {},
-  messageBox: {},
-  messageTimeText: {},
-  messageBubble: {},
-  messageText: {},
+  messageContainer: {
+    marginVertical: 6,
+    alignItems: 'flex-end',
+  },
+  messageOtherContainer: {
+    marginVertical: 6,
+    alignItems: 'flex-start',
+  },
+  messsageNameText: {
+    fontSize: 12,
+    color: Colors.GREY,
+    marginBottom: 4,
+  },
+  messageBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-end', //이게 시간을 밑으로 보내는 역할을 해줌!
+  },
+  messageTimeText: {fontSize: 12, color: Colors.GREY},
+  messageBubble: {
+    backgroundColor: Colors.BLACK,
+    borderRadius: 22,
+    padding: 12,
+    flexShrink: 1, //넘치지 않게!
+  },
+  messageOtherBubble: {
+    backgroundColor: Colors.LIGHTGREY,
+    borderRadius: 22,
+    padding: 12,
+    flexShrink: 1, //넘치지 않게!
+  },
+  messageText: {color: Colors.WHITE, fontSize: 16},
+  messageOtherText: {color: Colors.BLACK, fontSize: 16},
+  messageSeparator: {height: 8},
 });
 
 export default styles;
