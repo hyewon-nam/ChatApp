@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import Colors from '../modules/Colors';
 import AuthContext from '../components/AuthContext';
+import Message from '../components/Message';
 
 const ChatScreen = () => {
   const {user: me} = useContext(AuthContext);
@@ -22,10 +23,6 @@ const ChatScreen = () => {
   const [textInput, setTextInput] = useState(''); //destructuring 이 아님
   const {chat, loadingChat, sendMessage, sending, messages, loadingMessages} =
     useChat(userIds);
-
-  // useEffect(() => {
-  //   console.log('textInput:', textInput); // 상태 업데이트 확인용
-  // }, [textInput]);
 
   //useRoute 를 써야, 화면전환할 때 넘긴 파라미터를 가져올 수가 있음.
   const sendDisabled = useMemo(
@@ -72,11 +69,18 @@ const ChatScreen = () => {
             data={messages}
             renderItem={({item: messages}) => {
               return (
-                <View>
-                  <Text>{messages.text}</Text>
-                  <Text>{messages.createdAt.toLocaleString()}</Text>
-                  <Text>{messages.user.name}</Text>
-                </View>
+                <Message
+                  name={messages.user.name}
+                  text={messages.text}
+                  createdAt={messages.createdAt}
+                  isOtherMessage={
+                    messages.user.userId !== me?.userId
+                  }></Message>
+                // <View>
+                //   <Text>{messages.text}</Text>
+                //   <Text>{messages.createdAt.toLocaleString()}</Text>
+                //   <Text>{messages.user.name}</Text>
+                // </View>
               );
             }}
           />
@@ -109,6 +113,7 @@ const ChatScreen = () => {
     onPressSendButton,
     sendDisabled,
     textInput,
+    me,
   ]);
 
   return (

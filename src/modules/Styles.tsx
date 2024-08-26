@@ -155,6 +155,9 @@ const styles = StyleSheet.create({
   messageContainer: {},
   messsageNameText: {},
   messageBox: {},
+  messageTimeText: {},
+  messageBubble: {},
+  messageText: {},
 });
 
 export default styles;
