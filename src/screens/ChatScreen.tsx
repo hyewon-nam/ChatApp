@@ -1,4 +1,11 @@
-import React, {useCallback, useContext, useMemo, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Screen from '../components/Screen';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../types';
@@ -24,12 +31,25 @@ const ChatScreen = () => {
   const {chat, loadingChat, sendMessage, sending, messages, loadingMessages} =
     useChat(userIds);
 
+  const flatListRef = useRef<FlatList>(null);
+  useEffect(() => {
+    if (flatListRef.current) {
+      flatListRef.current?.scrollToEnd({animated: true});
+      // flatListRef.current.scrollToIndex({index: messages.length - 1});
+      // flatListRef.current.scrollToOffset({
+      //   offset: 200000000000000,
+      //   animated: true,
+      // });
+    }
+  }, [messages]);
+
   //useRoute 를 써야, 화면전환할 때 넘긴 파라미터를 가져올 수가 있음.
   const sendDisabled = useMemo(
     () => (textInput || '').length === 0,
     [textInput],
   ); //length 가 0 이면 true 를 반환, 아니면 false 를 반환.
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const disabledSendButtonStyle = [
     styles.chatSendButton,
     {backgroundColor: Colors.GREY},
@@ -66,6 +86,7 @@ const ChatScreen = () => {
 
         <View style={styles.chatMessageList}>
           <FlatList
+            ref={flatListRef} //이걸 이용하니까 갑자기 마지막으로 잘만감
             data={messages}
             renderItem={({item: messages}) => {
               return (
@@ -84,7 +105,7 @@ const ChatScreen = () => {
               );
             }}
             ItemSeparatorComponent={() => {
-              <View style={styles.messageSeeparator}></View>;
+              return <View style={styles.messageSeparator}></View>;
             }}
           />
         </View>

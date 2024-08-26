@@ -1,5 +1,9 @@
 import {useCallback, useEffect, useState} from 'react';
-import {collection, getFirestore} from '@react-native-firebase/firestore';
+import {
+  collection,
+  getFirestore,
+  onSnapshot,
+} from '@react-native-firebase/firestore';
 import {Chat, Collections, FirestoreMessageData, Message, User} from '../types';
 import _ from 'lodash';
 
@@ -14,6 +18,12 @@ const useChat = (userIds: string[]) => {
   const [messages, setMessage] = useState<Message[]>([]);
   const [sending, setSending] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
+
+  const addNewMessages = useCallback((newMessage: Message[]) => {
+    setMessage(prevMessages => {
+      return _.uniqBy(newMessage.concat(prevMessages), m => m.id);
+    });
+  }, []);
 
   const loadChat = useCallback(async () => {
     try {
@@ -73,6 +83,36 @@ const useChat = (userIds: string[]) => {
     console.log('1');
     loadChat();
   }, [loadChat, userIds]);
+
+  useEffect(() => {
+    if (chat?.id == null) {
+      return;
+    }
+
+    getFirestore()
+      .collection(Collections.CHATS)
+      .doc(chat?.id)
+      .collection(Collections.MESSAGES)
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(snapshot => {
+        //쿼리에 어떤 업데이트가 있을 때 마다, 이 부분이 실행됨!
+        const newMessages = snapshot
+          .docChanges()
+          .filter(({type}) => type === 'added')
+          .map(newMessageChanged => {
+            const docData = newMessageChanged.doc.data();
+            const newMessage: Message = {
+              id: docData.id,
+              text: docData.text,
+              user: docData.user,
+              createdAt: docData.createdAt,
+            }; //이렇게 하나하나 넣어줘야 함! 익숙해 집시당 :)
+
+            return newMessage;
+          });
+        addNewMessages(newMessages);
+      });
+  }, [addNewMessages, chat?.id]);
 
   const sendMessage = useCallback(
     async (text: string, user: User) => {
