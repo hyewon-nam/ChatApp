@@ -32,15 +32,46 @@ const ChatScreen = () => {
     useChat(userIds);
 
   const flatListRef = useRef<FlatList>(null);
+
   useEffect(() => {
-    if (flatListRef.current) {
-      flatListRef.current?.scrollToEnd({animated: true});
-      // flatListRef.current.scrollToIndex({index: messages.length - 1});
-      // flatListRef.current.scrollToOffset({
-      //   offset: 200000000000000,
-      //   animated: true,
-      // });
-    }
+    console.log('mounted!');
+    setTimeout(() => {
+      if (flatListRef.current) {
+        // flatListRef.current?.scrollToEnd({animated: true});
+        console.log('messages.length', messages.length);
+        flatListRef.current?.scrollToOffset({
+          offset: messages.length * 700, // 전체 콘텐츠 높이에서 입력 바의 높이를 뺀 값으로 스크롤합니다.
+          animated: true,
+        });
+      }
+    }, 3000);
+    // scrollIntoView({animated: true});
+  }, []);
+
+  useEffect(() => {
+    console.log('message changed!');
+    console.log('messages.length', messages.length);
+
+    // flatListRef.current?.scrollToEnd({animated: true});
+    // flatListRef.current?.scrollToOffset({
+    //   offset: messages.length * 600, // 전체 콘텐츠 높이에서 입력 바의 높이를 뺀 값으로 스크롤합니다.
+    //   animated: true,
+    // });
+
+    setTimeout(() => {
+      if (flatListRef.current) {
+        // flatListRef.current?.scrollToEnd({animated: true});
+        console.log('messages.length', messages.length);
+        flatListRef.current?.scrollToOffset({
+          offset: messages.length * 700, // 전체 콘텐츠 높이에서 입력 바의 높이를 뺀 값으로 스크롤합니다.
+          animated: true,
+        });
+      }
+    }, 3000);
+    // flatListRef.current?.scrollToIndex({
+    //   animated: true,
+    //   index: messages.length - 1,
+    // });
   }, [messages]);
 
   //useRoute 를 써야, 화면전환할 때 넘긴 파라미터를 가져올 수가 있음.
@@ -104,6 +135,7 @@ const ChatScreen = () => {
                 // </View>
               );
             }}
+            contentContainerStyle={{paddingBottom: 80}}
             ItemSeparatorComponent={() => {
               return <View style={styles.messageSeparator}></View>;
             }}

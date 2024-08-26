@@ -21,7 +21,7 @@ const useChat = (userIds: string[]) => {
 
   const addNewMessages = useCallback((newMessage: Message[]) => {
     setMessage(prevMessages => {
-      return _.uniqBy(newMessage.concat(prevMessages), m => m.id);
+      return _.uniq(prevMessages.concat(newMessage));
     });
   }, []);
 
@@ -33,10 +33,10 @@ const useChat = (userIds: string[]) => {
         .where('userIds', '==', getChatKey(userIds))
         .get();
 
-      console.log('chatSnapShot', chatSnapShot);
+      // console.log('chatSnapShot', chatSnapShot);
 
       if (chatSnapShot.docs.length > 0) {
-        console.log('옛날꺼 가져옴');
+        // console.log('옛날꺼 가져옴');
 
         const chatMessageSnapshot = await getFirestore()
           .collection(Collections.CHATS)
@@ -45,7 +45,7 @@ const useChat = (userIds: string[]) => {
           .get(); //sub-collection 에 접근해서 document add
 
         const chatMessage = chatMessageSnapshot.docs.map(doc => {
-          console.log('doc', doc);
+          // console.log('doc', doc);
           return {...(doc.data() as Message)};
         });
 
@@ -80,7 +80,6 @@ const useChat = (userIds: string[]) => {
   }, [userIds]);
 
   useEffect(() => {
-    console.log('1');
     loadChat();
   }, [loadChat, userIds]);
 
@@ -128,15 +127,15 @@ const useChat = (userIds: string[]) => {
           createdAt: new Date(),
         };
 
-        const chatMessage = await getFirestore()
+        await getFirestore()
           .collection(Collections.CHATS)
           .doc(chat.id)
           .collection(Collections.MESSAGES) //sub-collection 에 접근해서 document add
           .add(data);
 
-        setMessage(
-          prevMessages => prevMessages.concat([{id: chatMessage.id, ...data}]), //배열이라 concat 이 가능한 것임
-        );
+        // setMessage(
+        //   prevMessages => prevMessages.concat([{id: chatMessage.id, ...data}]), //배열이라 concat 이 가능한 것임
+        // );
       } finally {
         setSending(false);
       }
@@ -166,7 +165,7 @@ const useChat = (userIds: string[]) => {
         };
       });
 
-      console.log('msg', msg);
+      // console.log('msg', msg);
 
       setMessage(msg);
     } finally {
