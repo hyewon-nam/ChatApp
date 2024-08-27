@@ -196,6 +196,10 @@ const styles = StyleSheet.create({
   messageText: {color: Colors.WHITE, fontSize: 16},
   messageOtherText: {color: Colors.BLACK, fontSize: 16},
   messageSeparator: {height: 8},
+  profileContainer: {
+    backgroundColor: Colors.LIGHTGREY,
+    overflow: 'hidden', //부모 컨테이너가 원형일 때, 자식 컨테이너가 원형을 넘칠 수 없게 함.
+  },
 });
 
 export default styles;

@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import styles from '../modules/Styles';
 import moment from 'moment';
 
@@ -8,15 +8,28 @@ interface MessageProps {
   text: string;
   createdAt: Date;
   isOtherMessage: boolean;
+  profileImageUrl: string;
 }
 
-const Message = ({name, text, createdAt, isOtherMessage}: MessageProps) => {
+const Message = ({
+  name,
+  text,
+  createdAt,
+  isOtherMessage,
+  profileImageUrl,
+}: MessageProps) => {
   // console.log('createdAt', createdAt);
   // console.log('createdAt', moment(createdAt).format('yyyyMMDD HH:mm:ss'));
   const renderMessageBox = useCallback(() => {
     if (isOtherMessage == true) {
       return (
         <>
+          <View style={{}}>
+            <Image
+              source={{uri: profileImageUrl}}
+              style={{height: 48, width: 48, borderRadius: 28}}
+            />
+          </View>
           <View key="message" style={styles.messageOtherBubble}>
             <Text style={styles.messageOtherText}>{text}</Text>
           </View>
@@ -36,7 +49,7 @@ const Message = ({name, text, createdAt, isOtherMessage}: MessageProps) => {
         </View>
       </>
     );
-  }, [createdAt, isOtherMessage, text]);
+  }, [createdAt, isOtherMessage, profileImageUrl, text]);
   return (
     <View
       style={

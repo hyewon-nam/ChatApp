@@ -120,9 +120,13 @@ const ChatScreen = () => {
             ref={flatListRef} //이걸 이용하니까 갑자기 마지막으로 잘만감
             data={messages}
             renderItem={({item: messages}) => {
+              const user = chat.users?.find(
+                u => u.userId === messages.user.userId,
+              );
               return (
                 <Message
-                  name={messages.user.name}
+                  name={user.name}
+                  profileImageUrl={user?.profileUrl}
                   text={messages.text}
                   createdAt={messages.createdAt}
                   isOtherMessage={

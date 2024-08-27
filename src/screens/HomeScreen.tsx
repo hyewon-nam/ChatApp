@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import Profile from '../components/Profile';
 
 const HomeScreen = () => {
   const {user: me, updateProfileImage} = useContext(AuthContext);
@@ -62,7 +63,7 @@ const HomeScreen = () => {
           })
           .filter(u => u.userId !== me?.userId),
       ); //다른 것만 가져온다는 뜻 !
-      console.log('users', users);
+      // console.log('users', users);
     } finally {
       setLoadingUsers(false);
     }
@@ -93,11 +94,10 @@ const HomeScreen = () => {
         <View>
           <Text style={styles.homeSectionTitle}>나의 정보</Text>
           <View style={styles.homeMyProfile}>
-            <TouchableOpacity
-              style={styles.profileImage}
-              onPress={onPressProfile}>
-              <Image source={{uri: me?.profileUrl}} />
-            </TouchableOpacity>
+            <Profile
+              size={48}
+              onPress={onPressProfile}
+              imageUrl={me?.profileUrl}></Profile>
             <View style={{flexDirection: 'column', marginLeft: '5%'}}>
               <Text style={styles.homeMyNameText}>{me?.name}</Text>
               <Text style={styles.homeMyNameText}>{me?.email}</Text>

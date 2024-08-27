@@ -12,6 +12,16 @@ const getChatKey = (userIds: string[]) => {
   return _.orderBy(userIds, userId => userId, 'asc');
 };
 
+const loadUsers = async (userIds: string[]) => {
+  const userSnapShot = await getFirestore()
+    .collection(Collections.USERS)
+    .where('userId', 'in', userIds)
+    .get();
+
+  const users = userSnapShot.docs.map<User>(doc => doc.data() as User);
+  return users;
+};
+
 const useChat = (userIds: string[]) => {
   const [chat, setChat] = useState<Chat | null>(null);
   const [loadingChat, setLoadingChat] = useState(false);
@@ -51,20 +61,22 @@ const useChat = (userIds: string[]) => {
 
         setMessage(chatMessage);
 
+        const users = await loadUsers(userIds);
         const chat = chatSnapShot.docs[0];
 
         setChat({
           id: chat.id,
           userIds: chat.data().userIds as string[],
-          users: chat.data().users as User[],
+          users: users as User[],
         });
       } else {
-        const userSnapshot = await getFirestore()
-          .collection('users')
-          .where('userId', 'in', userIds)
-          .get();
+        // const userSnapshot = await getFirestore()
+        //   .collection('users')
+        //   .where('userId', 'in', userIds)
+        //   .get();
 
-        const users = userSnapshot.docs.map(doc => doc.data() as User);
+        // const userIds = userSnapshot.docs.map(doc => doc.data() as User);
+        const users = loadUsers(userIds);
         const data = {
           userIds: getChatKey(userIds),
           users,
