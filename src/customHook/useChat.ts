@@ -87,8 +87,9 @@ const useChat = (userIds: string[]) => {
     if (chat?.id == null) {
       return;
     }
+    setLoadingMessages(true);
 
-    getFirestore()
+    const unsubscribe = getFirestore()
       .collection(Collections.CHATS)
       .doc(chat?.id)
       .collection(Collections.MESSAGES)
@@ -110,7 +111,12 @@ const useChat = (userIds: string[]) => {
             return newMessage;
           });
         addNewMessages(newMessages);
+        setLoadingMessages(false);
       });
+
+    return () => {
+      unsubscribe(); //unmound 될 때 unsubscribe 됨 !
+    };
   }, [addNewMessages, chat?.id]);
 
   const sendMessage = useCallback(
@@ -143,42 +149,42 @@ const useChat = (userIds: string[]) => {
     [chat?.id],
   );
 
-  const loadMessages = useCallback(async (chatId: string) => {
-    try {
-      setLoadingMessages(true);
-      console.log('chatId', chatId);
+  // const loadMessages = useCallback(async (chatId: string) => {
+  //   try {
+  //     setLoadingMessages(true);
+  //     console.log('chatId', chatId);
 
-      const messagesSnapshot = await getFirestore()
-        .collection(Collections.CHATS)
-        .doc(chatId) //doc 은 문서 하나
-        .collection(Collections.MESSAGES) //그냥 collection 하면 해당하는 것 전부
-        .orderBy('createdAt', 'asc')
-        .get();
+  //     const messagesSnapshot = await getFirestore()
+  //       .collection(Collections.CHATS)
+  //       .doc(chatId) //doc 은 문서 하나
+  //       .collection(Collections.MESSAGES) //그냥 collection 하면 해당하는 것 전부
+  //       .orderBy('createdAt', 'asc')
+  //       .get();
 
-      const msg = messagesSnapshot.docs.map<Message>(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          user: data.user,
-          text: data.text,
-          createdAt: data.createdAt.toDate(),
-        };
-      });
+  //     const msg = messagesSnapshot.docs.map<Message>(doc => {
+  //       const data = doc.data();
+  //       return {
+  //         id: doc.id,
+  //         user: data.user,
+  //         text: data.text,
+  //         createdAt: data.createdAt.toDate(),
+  //       };
+  //     });
 
-      // console.log('msg', msg);
+  //     // console.log('msg', msg);
 
-      setMessage(msg);
-    } finally {
-      setLoadingMessages(false);
-    }
-  }, []);
+  //     setMessage(msg);
+  //   } finally {
+  //     setLoadingMessages(false);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    if (chat?.id != null) {
-      console.log('2');
-      loadMessages(chat.id);
-    }
-  }, [chat?.id, loadMessages]);
+  // useEffect(() => {
+  //   if (chat?.id != null) {
+  //     console.log('2');
+  //     loadMessages(chat.id);
+  //   }
+  // }, [chat?.id, loadMessages]);
 
   return {
     chat,

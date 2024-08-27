@@ -8,6 +8,7 @@ export interface AuthContextProp {
   signin: (email: string, password: string) => Promise<void>;
   processingSignup: boolean;
   processingSignin: boolean;
+  updateProfileImage?: (filepath: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProp>({
@@ -17,6 +18,7 @@ const AuthContext = createContext<AuthContextProp>({
   signin: async () => {},
   processingSignup: false,
   processingSignin: false,
+  updateProfileImage: async () => {},
 }); //초기 값이 없으면,, undefined 가 되어버려서 Type Script 에서 오류가 나기 때문에 초기화를 꼭 해주어야 함.
 
 export default AuthContext;

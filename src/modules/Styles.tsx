@@ -62,21 +62,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   homeMyProfile: {
-    // flexDirection: 'row',
+    flexDirection: 'row',
     backgroundColor: Colors.BLACK,
     padding: 20,
     borderRadius: 20,
+  },
+  profileImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: Colors.LIGHTGREY,
   },
   homeMyNameText: {
     color: Colors.WHITE,
     fontSize: 16,
     marginVertical: 2,
+    alignItems: 'center',
+    // backgroundColor: 'red',
+    flex: 1,
   },
   homeLogoutText: {
     color: Colors.WHITE,
     textAlign: 'right',
     fontSize: 18,
     fontWeight: 'bold',
+    // backgroundColor: 'green',
   },
   homeUserListSection: {
     marginTop: '10%',

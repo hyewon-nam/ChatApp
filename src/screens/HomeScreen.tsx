@@ -4,6 +4,7 @@ import AuthContext from '../components/AuthContext';
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   Text,
   TouchableOpacity,
   View,
@@ -16,9 +17,10 @@ import {User} from '../types';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../types';
+import ImageCropPicker from 'react-native-image-crop-picker';
 
 const HomeScreen = () => {
-  const {user: me} = useContext(AuthContext);
+  const {user: me, updateProfileImage} = useContext(AuthContext);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const onPressLogout = useCallback(() => {
@@ -27,6 +29,7 @@ const HomeScreen = () => {
   }, []);
   const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const onPressChatStart = useCallback(
     (userId: String) => {
       console.log(userId);
@@ -34,6 +37,19 @@ const HomeScreen = () => {
     },
     [navigate],
   );
+
+  const onPressProfile = useCallback(async () => {
+    const imageInformation = await ImageCropPicker.openPicker({
+      cropping: true,
+      cropperCircleOverlay: true,
+    });
+
+    if (updateProfileImage) {
+      await updateProfileImage(imageInformation.path);
+    }
+
+    console.log('imageInformation', imageInformation);
+  }, [updateProfileImage]);
 
   const loadUsers = useCallback(async () => {
     try {
@@ -77,14 +93,23 @@ const HomeScreen = () => {
         <View>
           <Text style={styles.homeSectionTitle}>나의 정보</Text>
           <View style={styles.homeMyProfile}>
-            <Text style={styles.homeMyNameText}>{me?.name}</Text>
-            <Text style={styles.homeMyNameText}>{me?.email}</Text>
-
-            <TouchableOpacity onPress={onPressLogout}>
+            <TouchableOpacity
+              style={styles.profileImage}
+              onPress={onPressProfile}>
+              <Image source={{uri: me?.profileUrl}} />
+            </TouchableOpacity>
+            <View style={{flexDirection: 'column', marginLeft: '5%'}}>
+              <Text style={styles.homeMyNameText}>{me?.name}</Text>
+              <Text style={styles.homeMyNameText}>{me?.email}</Text>
+            </View>
+            <TouchableOpacity
+              onPress={onPressLogout}
+              style={{marginLeft: '10%'}}>
               <Text style={styles.homeLogoutText}>Log out</Text>
             </TouchableOpacity>
           </View>
         </View>
+
         <View style={styles.homeUserListSection}>
           {loadingUsers ? (
             renderLoading()

@@ -33,26 +33,26 @@ const ChatScreen = () => {
 
   const flatListRef = useRef<FlatList>(null);
 
-  useEffect(() => {
-    console.log('mounted!');
-    setTimeout(() => {
-      if (flatListRef.current) {
-        // flatListRef.current?.scrollToEnd({animated: true});
-        console.log('messages.length', messages.length);
-        flatListRef.current?.scrollToOffset({
-          offset: messages.length * 700, // 전체 콘텐츠 높이에서 입력 바의 높이를 뺀 값으로 스크롤합니다.
-          animated: true,
-        });
-      }
-    }, 3000);
-    // scrollIntoView({animated: true});
-  }, []);
+  // useEffect(() => {
+  //   console.log('mounted!');
+  //   setTimeout(() => {
+  //     if (flatListRef.current) {
+  //       // flatListRef.current?.scrollToEnd({animated: true});
+  //       console.log('messages.length', messages.length);
+  //       flatListRef.current?.scrollToOffset({
+  //         offset: messages.length * 700, // 전체 콘텐츠 높이에서 입력 바의 높이를 뺀 값으로 스크롤합니다.
+  //         animated: true,
+  //       });
+  //     }
+  //   }, 3000);
+  //   // scrollIntoView({animated: true});
+  // }, []);
 
   useEffect(() => {
     console.log('message changed!');
-    console.log('messages.length', messages.length);
+    console.log('messages.length 1', messages.length);
 
-    // flatListRef.current?.scrollToEnd({animated: true});
+    flatListRef.current?.scrollToEnd({animated: true});
     // flatListRef.current?.scrollToOffset({
     //   offset: messages.length * 600, // 전체 콘텐츠 높이에서 입력 바의 높이를 뺀 값으로 스크롤합니다.
     //   animated: true,
@@ -61,7 +61,7 @@ const ChatScreen = () => {
     setTimeout(() => {
       if (flatListRef.current) {
         // flatListRef.current?.scrollToEnd({animated: true});
-        console.log('messages.length', messages.length);
+        console.log('messages.lengthv2', messages.length);
         flatListRef.current?.scrollToOffset({
           offset: messages.length * 700, // 전체 콘텐츠 높이에서 입력 바의 높이를 뺀 값으로 스크롤합니다.
           animated: true,

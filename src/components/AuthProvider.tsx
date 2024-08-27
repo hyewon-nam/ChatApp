@@ -5,6 +5,8 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {Collections, User} from '../types';
 import AuthContext from './AuthContext';
 import {Text, View} from 'react-native';
+import _ from 'lodash';
+import {getStorage} from '@react-native-firebase/storage';
 
 const AuthProvider = ({children}: {children: React.ReactNode}) => {
   const [initialized, setInitialized] = useState(false); // useState<boolean>(false) 이렇게 써도 됨. Type Inferance 라서, 당연히 여기서 boolean 이잖아 그래서 묵시
@@ -21,7 +23,9 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
           userId: firebaseUser.uid,
           email: firebaseUser.email ?? '',
           name: firebaseUser.displayName ?? '',
+          profileUrl: firebaseUser.photoURL ?? '',
         });
+        console.log('firebaseUser.photoURL', firebaseUser.photoURL);
         //login 처리
       } else {
         setUser(null);
@@ -69,6 +73,35 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
     }
   }, []);
 
+  const updateProfileImage = useCallback(
+    async (filepath: string) => {
+      // TODO: update Iamge
+
+      if (user == null) {
+        throw new Error();
+      }
+      const filename = _.last(filepath.split('/'));
+      if (filename == undefined) {
+        throw new Error('filename is undefined');
+      }
+
+      const storageFilePath = `user/${user?.userId}/${filename}`;
+      // TODO: registere image on user profile
+      await getStorage().ref(storageFilePath).putFile(filepath);
+      const url = await getStorage().ref(storageFilePath).getDownloadURL();
+
+      await auth().currentUser?.updateProfile({photoURL: url});
+
+      await getFirestore() //DB에도 저장
+        .collection(Collections.USERS)
+        .doc(user.userId)
+        .update({
+          profileUrl: url,
+        });
+    },
+    [user],
+  );
+
   const value = useMemo(() => {
     return {
       initialized,
@@ -77,8 +110,17 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
       signin,
       processingSignup,
       processingSignin,
+      updateProfileImage,
     };
-  }, [initialized, user, signup, signin, processingSignup, processingSignin]);
+  }, [
+    initialized,
+    user,
+    signup,
+    signin,
+    processingSignup,
+    processingSignin,
+    updateProfileImage,
+  ]);
 
   return (
     <AuthContext.Provider value={value}>
